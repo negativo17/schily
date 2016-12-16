@@ -1,5 +1,5 @@
 # Put to Alpha version if you need alpha releases
-%global alpha_version a06
+%global alpha_version a07
 
 # Expand version and url
 %if 0%{?alpha_version:1}
@@ -187,6 +187,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Dec 16 2016 Simone Caronni <negativo17@gmail.com> - 10:3.02-a07.1
+- Update to 3.02a07.
+
 * Fri Mar 25 2016 Simone Caronni <negativo17@gmail.com> - 10:3.02-a05.1
 - Update to 3.02a06.
 

@@ -6,41 +6,29 @@
 %define alpha_url /alpha
 %endif
 
-%if 0%{?rhel} == 5
-%global perms_cdda2wav %attr(4755, root, root)
-%global perms_cdrecord %attr(4755, root, root)
-%global perms_readcd %attr(4755, root, root)
-%else
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
 %global perms_readcd %caps(cap_dac_override,cap_sys_admin,cap_net_bind_service,cap_sys_rawio+ep)
-%endif
 
 Name:           cdrtools
 Version:        3.02
-Release:        %{?alpha_version}.1%{?dist}
+Release:        %{?alpha_version}.2%{?dist}
 Epoch:          10
 Summary:        CD/DVD/BluRay command line recording software
-
-Group:          Applications/Archiving
 License:        CDDL and GPLv2 and BSD
 URL:            http://cdrtools.sourceforge.net/private/cdrecord.html
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:        http://downloads.sourceforge.net/%{name}%{?alpha_url}/%{name}-%{version}%{?alpha_version}.tar.bz2
 Patch0:         %{name}-%{version}-cdrecord-default.patch
 
 BuildRequires:  gettext-devel
-%if 0%{?fedora} || 0%{?rhel} >= 6
 BuildRequires:  libcap-devel
-%endif
 
 %description
 A set of command line programs that allows to record CD/DVD/BluRay media.
 
 %package -n cdrecord
 Summary:        Creates an image of an ISO9660 file system
-Group:          Applications/Archiving
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      wodim < %{epoch}:
 Provides:       wodim = %{epoch}:
@@ -51,7 +39,6 @@ media.
 
 %package -n mkisofs
 Summary:        Creates an image of an ISO9660 file system
-Group:          Applications/Archiving
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      genisoimage < %{epoch}:
 Provides:       genisoimage = %{epoch}:
@@ -62,7 +49,6 @@ Rock Ridge attributes.
 
 %package -n cdda2wav
 Summary:        A CD-Audio Grabbing tool
-Group:          Applications/Multimedia
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      icedax < %{epoch}: 
 Provides:       icedax = %{epoch}:
@@ -72,7 +58,6 @@ The most evolved CD-audio extraction program with paranoia support.
 
 %package devel
 Summary:        Development files for %{name}
-Group:          Development/Libraries
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 
 %description devel
@@ -80,7 +65,6 @@ This package provides the development files of the %{name} package.
 
 %package libs
 Summary:        Libraries for %{name}
-Group:          System Environment/Libraries
 Requires(post): ldconfig
 
 %description libs
@@ -107,7 +91,6 @@ make GMAKE_NOWARN=true LINKMODE="dynamic" RUNPATH= \
     CPPOPTX="$RPM_OPT_FLAGS" COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS"
 
 %install
-rm -rf %{buildroot}
 make GMAKE_NOWARN=true LINKMODE="dynamic" RUNPATH= \
     INS_BASE=%{_prefix} INS_RBASE=/ DESTDIR=%{buildroot} \
     install
@@ -137,7 +120,6 @@ rm -rf %{buildroot}
 %postun libs -p /sbin/ldconfig
 
 %files -n cdrecord
-%defattr(-,root,root,-)
 %doc cdrecord/README*
 %config(noreplace) /etc/default/cdrecord
 %config(noreplace) /etc/default/rscsi
@@ -153,8 +135,8 @@ rm -rf %{buildroot}
 %{_mandir}/man1/scgskeleton.*
 
 %files -n mkisofs
-%defattr(-,root,root,-)
-%doc mkisofs/COPYING mkisofs/RELEASE mkisofs/TODO mkisofs/README*
+%license mkisofs/COPYING
+%doc mkisofs/RELEASE mkisofs/TODO mkisofs/README*
 %{_bindir}/mkisofs
 %{_bindir}/mkhybrid
 %{_bindir}/isoinfo
@@ -166,7 +148,6 @@ rm -rf %{buildroot}
 %{_prefix}/lib/siconv/*
 
 %files -n cdda2wav
-%defattr(-,root,root,-)
 %doc cdda2wav/FAQ cdda2wav/HOWTOUSE cdda2wav/NEEDED cdda2wav/TODO cdda2wav/THANKS cdda2wav/README
 %{_bindir}/cdda2mp3
 %{_bindir}/cdda2ogg
@@ -176,17 +157,19 @@ rm -rf %{buildroot}
 %{_mandir}/man1/cdda2ogg.*
 
 %files libs
-%defattr(-,root,root,-)
-%doc COPYING GPL-2.0.txt LGPL-2.1.txt CDDL.Schily.txt
+%license COPYING GPL-2.0.txt LGPL-2.1.txt CDDL.Schily.txt
 %{_libdir}/lib*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_mandir}/man3/*
 
 %changelog
+* Mon Feb 27 2017 Simone Caronni <negativo17@gmail.com> - 10:3.02-a07.2
+- Remove support for RHEL 5
+- Implement license macro.
+
 * Fri Dec 16 2016 Simone Caronni <negativo17@gmail.com> - 10:3.02-a07.1
 - Update to 3.02a07.
 

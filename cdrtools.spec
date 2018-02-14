@@ -1,5 +1,5 @@
 # Put to Alpha version if you need alpha releases
-%global alpha_version a07
+%global alpha_version a09
 
 # Expand version and url
 %if 0%{?alpha_version:1}
@@ -12,7 +12,7 @@
 
 Name:           cdrtools
 Version:        3.02
-Release:        %{?alpha_version}.2%{?dist}
+Release:        %{?alpha_version}.1%{?dist}
 Epoch:          10
 Summary:        CD/DVD/BluRay command line recording software
 License:        CDDL and GPLv2 and BSD
@@ -166,6 +166,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Wed Feb 14 2018 Simone Caronni <negativo17@gmail.com> - 10:3.02-a09.1
+- Update to 3.02a09.
+
 * Mon Feb 27 2017 Simone Caronni <negativo17@gmail.com> - 10:3.02-a07.2
 - Remove support for RHEL 5
 - Implement license macro.

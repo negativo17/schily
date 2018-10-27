@@ -12,7 +12,7 @@
 
 Name:           cdrtools
 Version:        3.02
-Release:        %{?alpha_version}.1%{?dist}
+Release:        %{?alpha_version}.2%{?dist}
 Epoch:          10
 Summary:        CD/DVD/BluRay command line recording software
 License:        CDDL and GPLv2 and BSD
@@ -21,6 +21,7 @@ URL:            http://cdrtools.sourceforge.net/private/cdrecord.html
 Source0:        http://downloads.sourceforge.net/%{name}%{?alpha_url}/%{name}-%{version}%{?alpha_version}.tar.bz2
 Patch0:         %{name}-%{version}-cdrecord-default.patch
 
+BuildRequires:  gcc-c++
 BuildRequires:  gettext-devel
 BuildRequires:  libcap-devel
 
@@ -166,6 +167,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sat Oct 27 2018 Simone Caronni <negativo17@gmail.com> - 10:3.02-a09.2
+- Add C++ compiler build requirement.
+
 * Wed Feb 14 2018 Simone Caronni <negativo17@gmail.com> - 10:3.02-a09.1
 - Update to 3.02a09.
 

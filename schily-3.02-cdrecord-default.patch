@@ -1,5 +1,5 @@
---- cdrecord/cdrecord.dfl.old	2010-11-26 10:35:53.014699458 +0100
-+++ cdrecord/cdrecord.dfl	2010-11-26 10:36:44.665751208 +0100
+--- schily-2020-04-18.old/cdrecord/cdrecord.dfl.old	2010-11-26 10:35:53.014699458 +0100
++++ schily-2020-04-18/cdrecord/cdrecord.dfl	2010-11-26 10:36:44.665751208 +0100
 @@ -10,8 +10,7 @@
  # an entry in the device table below only if you have more than
  # one CR-ROM drive in your system.

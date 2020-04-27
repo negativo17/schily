@@ -1,36 +1,48 @@
-# Put to Alpha version if you need alpha releases
-%global alpha_version a09
-
-# Expand version and url
-%if 0%{?alpha_version:1}
-%define alpha_url /alpha
-%endif
+%global version_schily 2020-04-18
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
 %global perms_readcd %caps(cap_dac_override,cap_sys_admin,cap_net_bind_service,cap_sys_rawio+ep)
 
-Name:           cdrtools
-Version:        3.02
-Release:        %{?alpha_version}.2%{?dist}
-Epoch:          10
-Summary:        CD/DVD/BluRay command line recording software
-License:        CDDL and GPLv2 and BSD
-URL:            http://cdrtools.sourceforge.net/private/cdrecord.html
+# Todo:
+# Figure out what to do with /usr/xpg4/bin/ Posix variation binaries
+# Fix ved online help in /usr/share/man/help/ved.help
+# Further split out components
+# Check if it's possible to move /usr/share/lib/*make files
+# Add patch to fix sccspatch link
+# More subpackages / different versions for subpackages?
 
-Source0:        http://downloads.sourceforge.net/%{name}%{?alpha_url}/%{name}-%{version}%{?alpha_version}.tar.bz2
-Patch0:         %{name}-%{version}-cdrecord-default.patch
+Name:           schily
+Version:        %(echo %version_schily | tr '-' '.')
+Release:        1%{?dist}
+Epoch:          10
+Summary:        The "Schily" Tool Box
+License:        CDDL-1.0 and GPLv2 and BSD
+URL:            http://schilytools.sourceforge.net/
+
+Source0:        https://downloads.sourceforge.net/schilytools/schily-%{version_schily}.tar.bz2
+Patch0:         %{name}-3.02-cdrecord-default.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext-devel
 BuildRequires:  libcap-devel
 
 %description
-A set of command line programs that allows to record CD/DVD/BluRay media.
+The "Schily" Tool Box is a set of tools written or managed by Jörg Schilling.
+
+%package -n sccs
+Summary:        Source Code Control System
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+
+%description -n sccs
+Source Code Control System (SCCS) is a version control system for
+tracking changes in source code and other text files during the
+development of a piece of software. This allows the user to retrieve
+any of the previous versions of the original source code and the
+changes which are stored.
 
 %package -n cdrecord
 Summary:        Creates an image of an ISO9660 file system
-Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      wodim < %{epoch}:
 Provides:       wodim = %{epoch}:
 
@@ -40,7 +52,6 @@ media.
 
 %package -n mkisofs
 Summary:        Creates an image of an ISO9660 file system
-Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      genisoimage < %{epoch}:
 Provides:       genisoimage = %{epoch}:
 
@@ -50,7 +61,6 @@ Rock Ridge attributes.
 
 %package -n cdda2wav
 Summary:        A CD-Audio Grabbing tool
-Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      icedax < %{epoch}: 
 Provides:       icedax = %{epoch}:
 
@@ -59,50 +69,83 @@ The most evolved CD-audio extraction program with paranoia support.
 
 %package devel
 Summary:        Development files for %{name}
-Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description devel
 This package provides the development files of the %{name} package.
 
 %package libs
 Summary:        Libraries for %{name}
+Provides:       cdrtools-libs = %{epoch}:%{version}-%{release}
+Obsoletes:      cdrtools-libs <= %{epoch}:3.02
 Requires(post): ldconfig
 
 %description libs
 This package provides the shared libraries for %{name}.
 
 %prep
-%setup -q
-%patch0 -p0
-rm -fr btcflash
+%autosetup -p1 -n schily-%{version_schily}
 
 # Convert files to utf8 for german letters
 for i in \
-    $(find . -name "*.c") \
     $(find . -name "*.1") \
-    $(find . -name "*.3") \
-    $(find . -name "*.8") \
+    $(find . -name "*.5") \
     $(find . -name "README*") \
     $(find . -name "THANKS*"); do
     iconv -f iso-8859-1 $i -t utf-8 -o $i.new && mv -f $i.new $i
 done
 
 %build
-make GMAKE_NOWARN=true LINKMODE="dynamic" RUNPATH= \
-    CPPOPTX="$RPM_OPT_FLAGS" COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS"
+make \
+    GMAKE_NOWARN=true \
+    LINKMODE="dynamic" \
+    RUNPATH= \
+    SCCS_BIN_PRE="%{_lib}/ccs/" \
+    SCCS_HELP_PRE="%{_lib}/ccs/" \
+    CPPOPTX="$RPM_OPT_FLAGS" \
+    COPTX="$RPM_OPT_FLAGS"
 
 %install
-make GMAKE_NOWARN=true LINKMODE="dynamic" RUNPATH= \
-    INS_BASE=%{_prefix} INS_RBASE=/ DESTDIR=%{buildroot} \
+make \
+    GMAKE_NOWARN=true \
+    LINKMODE="dynamic" \
+    RUNPATH= \
+    SCCS_BIN_PRE="%{_lib}/ccs/" \
+    SCCS_HELP_PRE="%{_lib}/ccs/" \
+    INS_BASE=%{_prefix} \
+    INS_RBASE=/ \
+    DESTDIR=%{buildroot} \
     install
 
 # Remove unused libraries
-rm -fr %{buildroot}%{_prefix}/lib/profiled
-rm -f %{buildroot}%{_prefix}/lib/lib*.a
-# Remove makefiles and makerules manpages
-rm -fr %{buildroot}%{_mandir}/man5
+rm -frv %{buildroot}%{_prefix}/lib/profiled
+find %{buildroot} -name "*.a" -delete
+
+# Fix sccpatch & svr4.make
+rm -frv %{buildroot}%{_prefix}/ccs
+ln -sf ../../../../bin/spatch %{buildroot}%{_libdir}/ccs/bin/sccspatch
+mv %{buildroot}%{_prefix}/lib/svr4.make %{buildroot}%{_bindir}
+
+# Remove unused binaries
+find %{buildroot} -name "btcflash*" -delete
+find %{buildroot} -name "pxupgrade*" -delete
+
+# Remove overlapping K&R cpp
+rm -fv %{buildroot}%{_prefix}/lib/cpp
+rm -fv %{buildroot}%{_mandir}/man1/cpp.*
+
+# Remove Bourne Shell replacement for /bin/sh
+rm -fv %{buildroot}%{_bindir}/{sh,bosh,jsh,pfsh}
+rm -fv %{buildroot}%{_mandir}/man1/sh.*
+
+# libsiconv tries to use libc's iconv first before trying its own tables
+rm -frv %{buildroot}%{_datadir}/lib/siconv
+
+# Remove various manpages
+rm -frv %{buildroot}%{_mandir}/de
+
 # Install documents directly from the files section
-rm -fr %{buildroot}%{_docdir}
+rm -frv %{buildroot}%{_docdir}
 
 # Move libraries to the appropriate place on 64 bit arches
 if [ %{_libdir} != %{_prefix}/lib ]; then 
@@ -110,20 +153,219 @@ if [ %{_libdir} != %{_prefix}/lib ]; then
     mv %{buildroot}%{_prefix}/lib/lib*.so* %{buildroot}%{_libdir}
 fi
 
-chmod 755 %{buildroot}%{_libdir}/lib*.so* \
-    %{buildroot}%{_bindir}/* %{buildroot}%{_sbindir}/*
+# Make binaries executable
+chmod 755 %{buildroot}%{_libdir}/lib*.so* %{buildroot}%{_bindir}/*
 
-%clean
-rm -rf %{buildroot}
+# TBD - Posix variations
+rm -frv %{buildroot}%{_prefix}/xpg4
+# TBD - Ved online help
+rm -frv %{buildroot}%{_mandir}/help
 
-%post libs -p /sbin/ldconfig
+%ldconfig_scriptlets libs
 
-%postun libs -p /sbin/ldconfig
+%files
+%doc star/README.* star/STARvsGNUTAR
+%config(noreplace) %{_sysconfdir}/default/rmt
+%config(noreplace) %{_sysconfdir}/default/star
+%config(noreplace) %{_sysconfdir}/sformat.dat
+%{_bindir}/Cstyle
+#{_bindir}/bosh
+%{_bindir}/bsh
+%{_bindir}/cal
+%{_bindir}/calc
+%{_bindir}/calltree
+%{_bindir}/change
+%{_bindir}/compare
+%{_bindir}/copy
+%{_bindir}/count
+%{_bindir}/cstyle.js
+%{_bindir}/dmake
+%{_bindir}/fifo
+%{_bindir}/gnutar
+%{_bindir}/hdump
+#{_bindir}/jsh
+%{_bindir}/label
+%{_bindir}/lndir
+%{_bindir}/make
+#{_prefix}/xpg4/bin/make
+%{_bindir}/man2html
+%{_bindir}/match
+%{_bindir}/mdigest
+%{_bindir}/mt
+%{_bindir}/obosh
+%{_bindir}/od
+%{_bindir}/opatch
+%{_bindir}/p
+%{_bindir}/pbosh
+%{_bindir}/pfbsh
+#{_bindir}/pfsh
+%{_bindir}/printf
+%{_bindir}/scpio
+%{_bindir}/scut
+%{_bindir}/sdd
+%{_bindir}/sfind
+%{_bindir}/sformat
+%{_bindir}/sgrow
+#{_bindir}/sh
+#{_prefix}/xpg4/bin/sh
+%{_bindir}/smake
+%{_bindir}/smt
+%{_bindir}/spaste
+%{_bindir}/spatch
+%{_bindir}/spax
+%{_bindir}/star
+%{_bindir}/star_sym
+%{_bindir}/strar
+%{_bindir}/suntar
+%{_bindir}/svr4.make
+%{_bindir}/tar
+%{_bindir}/tartest
+%{_bindir}/termcap
+%{_bindir}/translit
+%{_bindir}/udiff
+%{_bindir}/ustar
+%{_bindir}/ved
+%{_bindir}/ved-e
+%{_bindir}/ved-w
+%{_datadir}/lib
+%{_sbindir}/mountcd
+%{_sbindir}/rmt
+%{_mandir}/man1/bosh.*
+%{_mandir}/man1/bsh.*
+%{_mandir}/man1/cal.*
+%{_mandir}/man1/calc.*
+%{_mandir}/man1/calltree.*
+%{_mandir}/man1/change.*
+%{_mandir}/man1/compare.*
+%{_mandir}/man1/copy.*
+%{_mandir}/man1/count.*
+%{_mandir}/man1/cstyle.*
+%{_mandir}/man1/dmake.*
+%{_mandir}/man1/fifo.*
+%{_mandir}/man1/gnutar.*
+%{_mandir}/man1/hdump.*
+%{_mandir}/man1/jsh.*
+%{_mandir}/man1/label.*
+%{_mandir}/man1/lndir.*
+%{_mandir}/man1/make.*
+%{_mandir}/man1/man2html.*
+%{_mandir}/man1/match.*
+%{_mandir}/man1/mdigest.*
+%{_mandir}/man1/mountcd.*
+%{_mandir}/man1/mt.*
+%{_mandir}/man1/obosh.*
+%{_mandir}/man1/od.*
+%{_mandir}/man1/opatch.*
+%{_mandir}/man1/p.*
+%{_mandir}/man1/patch.*
+%{_mandir}/man1/pbosh.*
+%{_mandir}/man1/pfbsh.*
+%{_mandir}/man1/pfsh.*
+%{_mandir}/man1/printf.*
+%{_mandir}/man1/rmt.*
+%{_mandir}/man1/scpio.*
+%{_mandir}/man1/scut.*
+%{_mandir}/man1/sdd.*
+%{_mandir}/man1/sfind.*
+%{_mandir}/man1/sgrow.*
+#{_mandir}/man1/sh.*
+%{_mandir}/man1/smake.*
+%{_mandir}/man1/smt.*
+%{_mandir}/man1/spaste.*
+%{_mandir}/man1/spatch.*
+%{_mandir}/man1/spax.*
+%{_mandir}/man1/star.*
+%{_mandir}/man1/star_sym.*
+%{_mandir}/man1/strar.*
+%{_mandir}/man1/suntar.*
+%{_mandir}/man1/sysV-make.*
+%{_mandir}/man1/tartest.*
+%{_mandir}/man1/termcap.*
+%{_mandir}/man1/translit.*
+%{_mandir}/man1/udiff.*
+%{_mandir}/man1/ustar.*
+%{_mandir}/man1/ved-e.*
+%{_mandir}/man1/ved-w.*
+%{_mandir}/man1/ved.*
+%{_mandir}/man1/prs.*
+%{_mandir}/man1/prt.*
+%{_mandir}/man5/makefiles.*
+%{_mandir}/man5/makerules.*
+%{_mandir}/man5/star.*
+%{_mandir}/man5/streamarchive.*
+
+%files -n sccs
+%{_bindir}/sccs
+#{_prefix}/xpg4/bin/sccs
+%{_libdir}/ccs/bin/admin
+%{_libdir}/ccs/bin/bdiff
+%{_libdir}/ccs/bin/cdc
+%{_libdir}/ccs/bin/comb
+%{_libdir}/ccs/bin/delta
+%{_libdir}/ccs/bin/diff
+%{_libdir}/ccs/bin/get
+#{_prefix}/xpg4/bin/get
+%{_libdir}/ccs/bin/help
+%{_libdir}/ccs/bin/prs
+%{_libdir}/ccs/bin/prt
+%{_libdir}/ccs/bin/rcs2sccs
+%{_libdir}/ccs/bin/rmchg
+%{_libdir}/ccs/bin/rmdel
+%{_libdir}/ccs/bin/sact
+%{_libdir}/ccs/bin/sccs
+%{_libdir}/ccs/bin/sccscvt
+%{_libdir}/ccs/bin/sccsdiff
+%{_libdir}/ccs/bin/sccslog
+%{_libdir}/ccs/bin/sccspatch
+%{_libdir}/ccs/bin/unget
+%{_libdir}/ccs/bin/val
+%{_libdir}/ccs/bin/vc
+%{_libdir}/ccs/bin/what
+%{_libdir}/ccs/lib
+%{_mandir}/man1/sccs-admin.*
+%{_mandir}/man1/sccs-cdc.*
+%{_mandir}/man1/sccs-comb.*
+%{_mandir}/man1/sccs-cvt.*
+%{_mandir}/man1/sccs-delta.*
+%{_mandir}/man1/sccs-get.*
+%{_mandir}/man1/sccs-help.*
+%{_mandir}/man1/sccs-log.*
+%{_mandir}/man1/sccs-prs.*
+%{_mandir}/man1/sccs-prt.*
+%{_mandir}/man1/sccs-rcs2sccs.*
+%{_mandir}/man1/sccs-rmdel.*
+%{_mandir}/man1/sccs-sact.*
+%{_mandir}/man1/sccs-sccsdiff.*
+%{_mandir}/man1/sccs-unget.*
+%{_mandir}/man1/sccs-val.*
+%{_mandir}/man1/sccs.*
+%{_mandir}/man1/sccscvt.*
+%{_mandir}/man1/sccsdiff.*
+%{_mandir}/man1/sccslog.*
+%{_mandir}/man1/sccspatch.*
+%{_mandir}/man1/admin.*
+%{_mandir}/man1/bdiff.*
+%{_mandir}/man1/cdc.*
+%{_mandir}/man1/comb.*
+%{_mandir}/man1/delta.*
+%{_mandir}/man1/diff.*
+%{_mandir}/man1/get.*
+%{_mandir}/man1/help.*
+%{_mandir}/man1/rcs2sccs.*
+%{_mandir}/man1/rmdel.*
+%{_mandir}/man1/sact.*
+%{_mandir}/man1/unget.*
+%{_mandir}/man1/val.*
+%{_mandir}/man1/vc.*
+%{_mandir}/man1/what.*
+%{_mandir}/man5/changeset.5*
+%{_mandir}/man5/sccschangeset.5*
+%{_mandir}/man5/sccsfile.5*
 
 %files -n cdrecord
 %doc cdrecord/README*
-%config(noreplace) /etc/default/cdrecord
-%config(noreplace) /etc/default/rscsi
+%config(noreplace) %{_sysconfdir}/default/cdrecord
+%config(noreplace) %{_sysconfdir}/default/rscsi
 %{perms_cdrecord} %{_bindir}/cdrecord
 %{_bindir}/scgcheck
 %{_bindir}/scgskeleton
@@ -137,7 +379,7 @@ rm -rf %{buildroot}
 
 %files -n mkisofs
 %license mkisofs/COPYING
-%doc mkisofs/RELEASE mkisofs/TODO mkisofs/README*
+%doc mkisofs/README*
 %{_bindir}/mkisofs
 %{_bindir}/mkhybrid
 %{_bindir}/isoinfo
@@ -146,10 +388,9 @@ rm -rf %{buildroot}
 %{_bindir}/isovfy
 %{_bindir}/isodebug
 %{_mandir}/man8/*
-%{_prefix}/lib/siconv/*
 
 %files -n cdda2wav
-%doc cdda2wav/FAQ cdda2wav/HOWTOUSE cdda2wav/NEEDED cdda2wav/TODO cdda2wav/THANKS cdda2wav/README
+%doc cdda2wav/FAQ cdda2wav/HOWTOUSE cdda2wav/NEEDED cdda2wav/THANKS cdda2wav/README
 %{_bindir}/cdda2mp3
 %{_bindir}/cdda2ogg
 %{perms_cdda2wav} %{_bindir}/cdda2wav
@@ -167,6 +408,10 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 26 2020 Simone Caronni <negativo17@gmail.com> - 10:2020.04.18-1
+- Build Schily tools from the same SPEC file and keep cdrtools separate in
+  subpackages.
+
 * Sat Oct 27 2018 Simone Caronni <negativo17@gmail.com> - 10:3.02-a09.2
 - Add C++ compiler build requirement.
 

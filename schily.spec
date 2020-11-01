@@ -1,4 +1,4 @@
-%global version_schily 2020-07-01
+%global version_schily 2020-10-09
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -180,7 +180,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_bindir}/count
 %{_bindir}/cstyle.js
 %{_bindir}/dmake
+%{_bindir}/fdiff
 %{_bindir}/fifo
+%{_bindir}/fsdiff
 %{_bindir}/gnutar
 %{_bindir}/hdump
 #{_bindir}/jsh
@@ -241,7 +243,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man1/count.*
 %{_mandir}/man1/cstyle.*
 %{_mandir}/man1/dmake.*
+%{_mandir}/man1/fdiff.*
 %{_mandir}/man1/fifo.*
+%{_mandir}/man1/fsdiff.*
 %{_mandir}/man1/gnutar.*
 %{_mandir}/man1/hdump.*
 %{_mandir}/man1/jsh.*
@@ -303,6 +307,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_libdir}/ccs/bin/comb
 %{_libdir}/ccs/bin/delta
 %{_libdir}/ccs/bin/diff
+%{_libdir}/ccs/bin/fsdiff
 %{_libdir}/ccs/bin/get
 #{_prefix}/xpg4/bin/get
 %{_libdir}/ccs/bin/help
@@ -322,31 +327,45 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_libdir}/ccs/bin/vc
 %{_libdir}/ccs/bin/what
 %{_libdir}/ccs/lib
+%{_mandir}/man1/sccs-add.*
 %{_mandir}/man1/sccs-admin.*
+%{_mandir}/man1/sccs-branch.*
 %{_mandir}/man1/sccs-cdc.*
 %{_mandir}/man1/sccs-check.*
+%{_mandir}/man1/sccs-clean.*
 %{_mandir}/man1/sccs-comb.*
+%{_mandir}/man1/sccs-commit.*
+%{_mandir}/man1/sccs-create.*
 %{_mandir}/man1/sccs-cvt.*
 %{_mandir}/man1/sccs-deledit.*
 %{_mandir}/man1/sccs-delget.*
 %{_mandir}/man1/sccs-delta.*
 %{_mandir}/man1/sccs-edit.*
+%{_mandir}/man1/sccs-diffs.*
 %{_mandir}/man1/sccs-editor.*
+%{_mandir}/man1/sccs-enter.*
+%{_mandir}/man1/sccs-fix.*
 %{_mandir}/man1/sccs-get.*
 %{_mandir}/man1/sccs-help.*
 %{_mandir}/man1/sccs-histfile.*
 %{_mandir}/man1/sccs-info.*
 %{_mandir}/man1/sccs-init.*
 %{_mandir}/man1/sccs-istext.*
+%{_mandir}/man1/sccs-ldiffs.*
 %{_mandir}/man1/sccs-log.*
+%{_mandir}/man1/sccs-print.*
 %{_mandir}/man1/sccs-prs.*
 %{_mandir}/man1/sccs-prt.*
 %{_mandir}/man1/sccs-rcs2sccs.*
+%{_mandir}/man1/sccs-remove.*
+%{_mandir}/man1/sccs-rename.*
 %{_mandir}/man1/sccs-rmdel.*
 %{_mandir}/man1/sccs-root.*
 %{_mandir}/man1/sccs-sact.*
 %{_mandir}/man1/sccs-sccsdiff.*
+%{_mandir}/man1/sccs-status.*
 %{_mandir}/man1/sccs-tell.*
+%{_mandir}/man1/sccs-unedit.*
 %{_mandir}/man1/sccs-unget.*
 %{_mandir}/man1/sccs-val.*
 %{_mandir}/man1/sccs.*
@@ -419,6 +438,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Sun Nov 01 2020 Simone Caronni <negativo17@gmail.com> - 10:2020.10.09-1
+- Update to 2020-10-09.
+
 * Thu Jul 09 2020 Simone Caronni <negativo17@gmail.com> - 10:2020.07.01-1
 - Update to 2020-07-01.
 

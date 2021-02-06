@@ -1,4 +1,4 @@
-%global version_schily 2020-10-09
+%global version_schily 2021-01-05
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -156,6 +156,10 @@ fi
 # Make binaries executable
 chmod 755 %{buildroot}%{_libdir}/lib*.so* %{buildroot}%{_bindir}/*
 
+# Config files
+mv %{buildroot}%{_prefix}%{_sysconfdir}/termcap %{buildroot}%{_sysconfdir}/
+rm -fr %{buildroot}%{_prefix}%{_sysconfdir}
+
 # TBD - Posix variations
 rm -frv %{buildroot}%{_prefix}/xpg4
 # TBD - Ved online help
@@ -179,6 +183,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_bindir}/copy
 %{_bindir}/count
 %{_bindir}/cstyle.js
+%{_bindir}/ctags
 %{_bindir}/dmake
 %{_bindir}/fdiff
 %{_bindir}/fifo
@@ -226,6 +231,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_bindir}/translit
 %{_bindir}/udiff
 %{_bindir}/ustar
+%{_bindir}/vctags
 %{_bindir}/ved
 %{_bindir}/ved-e
 %{_bindir}/ved-w
@@ -288,6 +294,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man1/translit.*
 %{_mandir}/man1/udiff.*
 %{_mandir}/man1/ustar.*
+%{_mandir}/man1/vctags.*
 %{_mandir}/man1/ved-e.*
 %{_mandir}/man1/ved-w.*
 %{_mandir}/man1/ved.*
@@ -297,6 +304,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man5/makerules.*
 %{_mandir}/man5/star.*
 %{_mandir}/man5/streamarchive.*
+%{_sysconfdir}/termcap
 
 %files -n sccs
 %{_bindir}/sccs
@@ -438,6 +446,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Sat Feb 06 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.01.05-1
+- Update to 2021-01-05.
+
 * Sun Nov 01 2020 Simone Caronni <negativo17@gmail.com> - 10:2020.10.09-1
 - Update to 2020-10-09.
 

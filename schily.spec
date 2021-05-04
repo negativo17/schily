@@ -1,4 +1,4 @@
-%global version_schily 2021-01-05
+%global version_schily 2021-04-21
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -446,6 +446,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Tue May 04 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.04.21-1
+- Update to 2021-04-21.
+
 * Sat Feb 06 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.01.05-1
 - Update to 2021-01-05.
 

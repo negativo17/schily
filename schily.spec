@@ -1,4 +1,4 @@
-%global version_schily 2021-04-21
+%global version_schily 2021-07-29
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -124,7 +124,7 @@ find %{buildroot} -name "*.a" -delete
 # Fix sccpatch & svr4.make
 rm -frv %{buildroot}%{_prefix}/ccs
 ln -sf ../../../../bin/spatch %{buildroot}%{_libdir}/ccs/bin/sccspatch
-mv %{buildroot}%{_prefix}/lib/svr4.make %{buildroot}%{_bindir}
+rm -fr %{buildroot}%{_prefix}/lib/svr4.make
 
 # Remove unused binaries
 find %{buildroot} -name "btcflash*" -delete
@@ -132,7 +132,6 @@ find %{buildroot} -name "pxupgrade*" -delete
 
 # Remove overlapping K&R cpp
 rm -fv %{buildroot}%{_prefix}/lib/cpp
-rm -fv %{buildroot}%{_mandir}/man1/cpp.*
 
 # Remove Bourne Shell replacement for /bin/sh
 rm -fv %{buildroot}%{_bindir}/{sh,bosh,jsh,pfsh}
@@ -191,6 +190,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_bindir}/gnutar
 %{_bindir}/hdump
 #{_bindir}/jsh
+%{_bindir}/krcpp
 %{_bindir}/label
 %{_bindir}/lndir
 %{_bindir}/make
@@ -255,6 +255,7 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man1/gnutar.*
 %{_mandir}/man1/hdump.*
 %{_mandir}/man1/jsh.*
+%{_mandir}/man1/krcpp.*
 %{_mandir}/man1/label.*
 %{_mandir}/man1/lndir.*
 %{_mandir}/man1/make.*
@@ -446,6 +447,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Mon Aug 09 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.07.29-1
+- Update to 2021-09-27 release.
+
 * Tue May 04 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.04.21-1
 - Update to 2021-04-21.
 

@@ -1,4 +1,4 @@
-%global version_schily 2021-09-01
+%global version_schily 2022-08-18-beta
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -14,13 +14,13 @@
 
 Name:           schily
 Version:        %(echo %version_schily | tr '-' '.')
-Release:        2%{?dist}
+Release:        1%{?dist}
 Epoch:          10
 Summary:        The "Schily" Tool Box
 License:        CDDL-1.0 and GPLv2 and BSD
 URL:            http://schilytools.sourceforge.net/
 
-Source0:        https://downloads.sourceforge.net/schilytools/schily-%{version_schily}.tar.bz2
+Source0:        https://codeberg.org/schilytools/schilytools/archive/%{version_schily}.tar.gz#/schily-%{version_schily}.tar.gz
 Patch0:         %{name}-3.02-cdrecord-default.patch
 
 BuildRequires:  gcc-c++
@@ -84,7 +84,7 @@ Requires(post): ldconfig
 This package provides the shared libraries for %{name}.
 
 %prep
-%autosetup -p1 -n schily-%{version_schily}
+%autosetup -p1 -n schilytools
 
 # Convert files to utf8 for german letters
 for i in \
@@ -447,6 +447,10 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 12 2022 Simone Caronni <negativo17@gmail.com> - 10:2022.08.18.beta-1
+- Update to new maintained fork at Codeberg:
+  https://codeberg.org/schilytools/schilytools
+
 * Sun Sep 12 2021 Simone Caronni <negativo17@gmail.com> - 10:2021.09.01-2
 - Update to 2021-09-01.
 

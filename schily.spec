@@ -1,4 +1,4 @@
-%global version_schily 2022-08-18-beta
+%global version_schily 2022-09-18
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -14,7 +14,7 @@
 
 Name:           schily
 Version:        %(echo %version_schily | tr '-' '.')
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          10
 Summary:        The "Schily" Tool Box
 License:        CDDL-1.0 and GPLv2 and BSD
@@ -447,6 +447,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 20 2022 Simone Caronni <negativo17@gmail.com> - 10:2022.09.18-2
+- Update to 2022-09-18.
+
 * Mon Sep 12 2022 Simone Caronni <negativo17@gmail.com> - 10:2022.08.18.beta-1
 - Update to new maintained fork at Codeberg:
   https://codeberg.org/schilytools/schilytools

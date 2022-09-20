@@ -21,7 +21,7 @@ License:        CDDL-1.0 and GPLv2 and BSD
 URL:            http://schilytools.sourceforge.net/
 
 Source0:        https://codeberg.org/schilytools/schilytools/archive/%{version_schily}.tar.gz#/schily-%{version_schily}.tar.gz
-Patch0:         %{name}-3.02-cdrecord-default.patch
+Patch0:         %{name}-cdrecord-default.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext-devel

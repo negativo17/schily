@@ -1,0 +1,19 @@
+diff -Naur schilytools.old/cdrecord/cdrecord.dfl schilytools/cdrecord/cdrecord.dfl
+--- schilytools.old/cdrecord/cdrecord.dfl	2022-09-20 21:56:04.356785063 +0200
++++ schilytools/cdrecord/cdrecord.dfl	2022-09-20 21:57:59.672856267 +0200
+@@ -10,8 +10,7 @@
+ # an entry in the device table below only if you have more than
+ # one CR-ROM drive in your system.
+ #
+-#CDR_DEVICE=yamaha
+-#CDR_DEVICE=default
++CDR_DEVICE=default
+ 
+ # 
+ # The default speed (speed=), if not specified elswhere
+@@ -67,4 +66,4 @@
+ #yamaha=		1,5,0		-1	-1	""
+ #cdrom=		0,6,0		2	1m	""
+ #remote=	REMOTE:rscsi@somehost:1,0,0 16	16m	burnfree
+-
++default=    /dev/sr0        -1      -1      burnfree

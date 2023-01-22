@@ -23,7 +23,12 @@ URL:            http://schilytools.sourceforge.net/
 Source0:        https://codeberg.org/schilytools/schilytools/archive/%{version_schily}.tar.gz#/schily-%{version_schily}.tar.gz
 Patch0:         %{name}-cdrecord-default.patch
 
+%if 0%{?rhel} == 7
+BuildRequires:  devtoolset-9-gcc-c++
+%else
 BuildRequires:  gcc-c++
+%endif
+
 BuildRequires:  gettext-devel
 BuildRequires:  libcap-devel
 
@@ -96,6 +101,10 @@ for i in \
 done
 
 %build
+%if 0%{?rhel} == 7
+. /opt/rh/devtoolset-9/enable
+%endif
+
 make \
     GMAKE_NOWARN=true \
     LINKMODE="dynamic" \

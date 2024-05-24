@@ -1,4 +1,4 @@
-%global version_schily 2023-09-28
+%global version_schily 2024-03-21
 
 %global perms_cdda2wav %caps(cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_sys_rawio+ep)
 %global perms_cdrecord %caps(cap_sys_resource,cap_dac_override,cap_sys_admin,cap_sys_nice,cap_net_bind_service,cap_ipc_lock,cap_sys_rawio+ep)
@@ -454,6 +454,9 @@ rm -frv %{buildroot}%{_mandir}/help
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 24 2024 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-1
+- Update to release 2024-03-21.
+
 * Fri Sep 29 2023 Simone Caronni <negativo17@gmail.com> - 10:2023.09.28-1
 - Update to 2023-09-28 release.
 

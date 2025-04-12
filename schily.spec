@@ -9,7 +9,7 @@
 
 Name:           schily
 Version:        %(echo %version_schily | tr '-' '.')
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          10
 Summary:        The "Schily" Tool Box
 License:        CDDL-1.0 and GPLv2 and LGPL-2.1 and BSD-2-Clause and BSD-3-Clause
@@ -114,6 +114,9 @@ if [ %{_libdir} != %{_prefix}/lib ]; then
     mv %{buildroot}%{_prefix}/lib/lib*.so.* %{buildroot}%{_libdir}
 fi
 
+# Make binaries executable
+chmod 755 %{buildroot}%{_libdir}/lib*.so* %{buildroot}%{_bindir}/*
+
 # Remove unused stuff:
 rm -fr \
   %{buildroot}%{_libdir}/*.so \
@@ -206,6 +209,9 @@ done
 %{_libdir}/libsiconv.so.1.0
 
 %changelog
+* Sat Apr 12 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-3
+- Fix library installation.
+
 * Fri Apr 11 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-2
 - Build only cdrtools related components and drop the rest.
 - Remove some warnings during build.

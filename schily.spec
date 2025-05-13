@@ -9,14 +9,13 @@
 
 Name:           schily
 Version:        %(echo %version_schily | tr '-' '.')
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          10
 Summary:        The "Schily" Tool Box
 License:        CDDL-1.0 and GPLv2 and LGPL-2.1 and BSD-2-Clause and BSD-3-Clause
 URL:            https://codeberg.org/schilytools/schilytools
 
 Source0:        %{url}/archive/%{version_schily}.tar.gz#/schily-%{version_schily}.tar.gz
-Patch0:         %{name}-cdrecord-default.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext-devel
@@ -208,6 +207,9 @@ done
 %{_libdir}/libsiconv.so.1.0
 
 %changelog
+* Tue May 13 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-5
+- Drop cdrecord default configuration.
+
 * Tue May 13 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-4
 - Do not set LDOPTX (https://codeberg.org/schilytools/schilytools/issues/102).
 

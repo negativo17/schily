@@ -9,7 +9,7 @@
 
 Name:           schily
 Version:        %(echo %version_schily | tr '-' '.')
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          10
 Summary:        The "Schily" Tool Box
 License:        CDDL-1.0 and GPLv2 and LGPL-2.1 and BSD-2-Clause and BSD-3-Clause
@@ -80,7 +80,6 @@ make_command() {
       CPPOPTX="%{build_cxxflags} -Wno-incompatible-pointer-types -Wno-old-style-definition" \
       COPTX="%{build_cflags} -Wno-incompatible-pointer-types -Wno-old-style-definition" \
       GMAKE_NOWARN=true \
-      LDOPTX="%{build_ldflags}" \
       LINKMODE="dynamic" \
       NOECHO= \
       RUNPATH= \
@@ -209,6 +208,9 @@ done
 %{_libdir}/libsiconv.so.1.0
 
 %changelog
+* Tue May 13 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-4
+- Do not set LDOPTX (https://codeberg.org/schilytools/schilytools/issues/102).
+
 * Sat Apr 12 2025 Simone Caronni <negativo17@gmail.com> - 10:2024.03.21-3
 - Fix library installation.
 
